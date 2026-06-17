@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SLOT: page-title -->
+  <title><!-- PROJECT NAME --> — Dave Frazee</title>
+  <style>
+    /* ============================================================
+       SHARED STYLES — do not modify these
+       These match index.html exactly
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f12;
+      --surface: #13161a;
+      --border: #1e2227;
+      --text-primary: #e8edf2;
+      --text-secondary: #8a9099;
+      --text-tertiary: #4a5058;
+      --accent: #c8a96e;
+      --accent-dim: rgba(200,169,110,0.15);
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Space Grotesk', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text-primary); font-family: var(--sans); }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(13,15,18,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: var(--sans); font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-primary); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-back { font-family: var(--mono); font-size: 11px; color: var(--text-secondary); text-decoration: none; letter-spacing: 0.08em; }
+    .nav-back:hover { color: var(--accent); }
+
+    /* HERO */
+    .case-hero {
+      margin-top: 60px;
+      height: 70vh;
+      min-height: 480px;
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .case-hero img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.75;
+    }
+    .case-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(13,15,18,0.9) 0%, rgba(13,15,18,0.2) 60%, transparent 100%);
+    }
+    .case-hero-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 48px 40px;
+      max-width: 900px;
+    }
+    .case-eyebrow {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+    }
+    .case-title {
+      font-family: var(--sans); font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700; line-height: 1.05; letter-spacing: -0.02em;
+      color: var(--text-primary); margin-bottom: 20px;
+    }
+
+    /* META CHIPS */
+    .meta-chips {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      padding: 28px 40px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .meta-chip {
+      display: flex; flex-direction: column; gap: 3px;
+      padding: 10px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+    .chip-label {
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+    .chip-value {
+      font-family: var(--sans); font-size: 13px;
+      font-weight: 500; color: var(--text-primary);
+    }
+
+    /* CONTENT */
+    .case-content { max-width: 840px; margin: 0 auto; padding: 80px 40px; }
+
+    .case-section { margin-bottom: 80px; }
+
+    .section-label {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 24px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    .case-body {
+      font-size: 17px; line-height: 1.75;
+      color: var(--text-secondary); max-width: 680px;
+    }
+    .case-body p + p { margin-top: 1em; }
+
+    /* STATS */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px; background: var(--border);
+      margin: 40px 0; border: 1px solid var(--border);
+    }
+    .stat-block {
+      background: var(--surface); padding: 28px 24px;
+    }
+    .stat-number {
+      font-family: var(--sans); font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700; letter-spacing: -0.03em;
+      color: var(--text-primary); margin-bottom: 6px;
+    }
+    .stat-label {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    /* CONCEPT → BUILT */
+    .concept-built {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2px; background: var(--border);
+      margin: 40px 0;
+    }
+    .concept-panel { position: relative; overflow: hidden; background: var(--surface); }
+    .concept-panel img { width: 100%; height: 360px; object-fit: cover; display: block; opacity: 0.85; }
+    .concept-panel-label {
+      position: absolute; top: 16px; left: 16px;
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); background: rgba(13,15,18,0.85);
+      padding: 4px 10px;
+    }
+    .concept-caption {
+      padding: 14px 16px;
+      font-family: var(--mono); font-size: 10px;
+      color: var(--text-tertiary); line-height: 1.5;
+      border-top: 1px solid var(--border);
+    }
+
+    /* GALLERY */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px; background: var(--border);
+      margin: 40px 0;
+    }
+    .gallery-grid.three-up { grid-template-columns: repeat(3, 1fr); }
+    .gallery-item { position: relative; overflow: hidden; background: var(--surface); }
+    .gallery-item.span-2 { grid-column: span 2; }
+    .gallery-item img { width: 100%; height: 280px; object-fit: cover; display: block; opacity: 0.85; transition: opacity 0.3s; }
+    .gallery-item img:hover { opacity: 1; }
+    .gallery-caption {
+      padding: 10px 12px;
+      font-family: var(--mono); font-size: 10px;
+      color: var(--text-tertiary); line-height: 1.4;
+    }
+
+    /* THE WORK */
+    .work-list { list-style: none; margin-top: 8px; }
+    .work-list li {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px; color: var(--text-secondary);
+      display: flex; align-items: baseline; gap: 12px;
+    }
+    .work-list li::before {
+      content: '—'; color: var(--accent);
+      font-family: var(--mono); font-size: 12px; flex-shrink: 0;
+    }
+
+    /* PARTNERS */
+    .partners-strip {
+      border-top: 1px solid var(--border);
+      padding: 40px;
+      background: var(--surface);
+    }
+    .partners-label {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-tertiary); margin-bottom: 24px;
+    }
+    .partners-list {
+      display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+    }
+    .partner-name {
+      font-family: var(--sans); font-size: 13px;
+      color: var(--text-secondary); font-weight: 500;
+      padding: 6px 14px; border: 1px solid var(--border);
+    }
+
+    /* FOOTER NAV */
+    .case-footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-back {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--text-secondary); text-decoration: none;
+      letter-spacing: 0.08em;
+    }
+    .footer-back:hover { color: var(--accent); }
+    .footer-sig {
+      font-family: var(--mono); font-size: 10px;
+      color: var(--text-tertiary); letter-spacing: 0.08em;
+    }
+
+    /* PHOTO CREDIT */
+    .photo-credit {
+      font-family: var(--mono); font-size: 9px;
+      color: var(--text-tertiary); letter-spacing: 0.08em;
+      padding: 8px 40px; text-align: right;
+    }
+
+    @media (max-width: 700px) {
+      nav { padding: 16px 20px; }
+      .case-hero-content { padding: 32px 20px; }
+      .meta-chips { padding: 20px; }
+      .case-content { padding: 48px 20px; }
+      .concept-built { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item.span-2 { grid-column: span 1; }
+      .case-footer { padding: 24px 20px; flex-direction: column; gap: 12px; }
+      .partners-strip { padding: 32px 20px; }
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">DAVE <span>FRAZEE</span></a>
+    <a href="index.html" class="nav-back">← All work</a>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+       SLOT: hero-image — src should be file path or base64
+       SLOT: hero-eyebrow — e.g. "Strategy · Owner's Rep · Portfolio Management"
+       SLOT: hero-title — Project name
+  ============================================================ -->
+  <section class="case-hero">
+    <img src="<!-- HERO IMAGE SRC -->" alt="<!-- HERO ALT TEXT -->">
+    <div class="case-hero-overlay"></div>
+    <div class="case-hero-content">
+      <p class="case-eyebrow"><!-- HERO EYEBROW e.g. Strategy · Owner's Rep · Design Management --></p>
+      <h1 class="case-title"><!-- PROJECT NAME --></h1>
+    </div>
+  </section>
+
+  <!-- PHOTO CREDIT (optional — remove if no credit needed) -->
+  <p class="photo-credit"><!-- PHOTO CREDIT e.g. "Photo: Jason Keen" --></p>
+
+  <!-- ============================================================
+       META CHIPS
+       SLOT: role, client, location, years
+       Add or remove chips as needed
+  ============================================================ -->
+  <div class="meta-chips">
+    <div class="meta-chip">
+      <span class="chip-label">Role</span>
+      <span class="chip-value"><!-- ROLE --></span>
+    </div>
+    <div class="meta-chip">
+      <span class="chip-label">Client</span>
+      <span class="chip-value"><!-- CLIENT --></span>
+    </div>
+    <div class="meta-chip">
+      <span class="chip-label">Location</span>
+      <span class="chip-value"><!-- LOCATION --></span>
+    </div>
+    <div class="meta-chip">
+      <span class="chip-label">Years</span>
+      <span class="chip-value"><!-- YEARS --></span>
+    </div>
+  </div>
+
+  <main class="case-content">
+
+    <!-- ============================================================
+         THE BRIEF
+         SLOT: brief-body — 2–4 sentences, strategy framing
+         SLOT: stats — optional, remove entire .stats-grid if unused
+    ============================================================ -->
+    <section class="case-section">
+      <p class="section-label">The Brief</p>
+      <div class="case-body">
+        <p><!-- BRIEF PARAGRAPH 1 --></p>
+        <p><!-- BRIEF PARAGRAPH 2 (optional — delete if not needed) --></p>
+      </div>
+
+      <!-- STATS (remove this block if no verified figures) -->
+      <div class="stats-grid">
+        <div class="stat-block">
+          <p class="stat-number"><!-- STAT 1 VALUE e.g. $862.9M --></p>
+          <p class="stat-label"><!-- STAT 1 LABEL e.g. Total development value --></p>
+        </div>
+        <div class="stat-block">
+          <p class="stat-number"><!-- STAT 2 VALUE --></p>
+          <p class="stat-label"><!-- STAT 2 LABEL --></p>
+        </div>
+        <div class="stat-block">
+          <p class="stat-number"><!-- STAT 3 VALUE --></p>
+          <p class="stat-label"><!-- STAT 3 LABEL --></p>
+        </div>
+        <!-- Add or remove stat-block divs as needed -->
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CONCEPT → BUILT
+         SLOT: concept image, built image, captions
+         Remove entire section if not applicable
+         IMPORTANT: Attribution — if HOK or another firm was architect
+         of record, credit them in the caption, not as Dave's design work.
+    ============================================================ -->
+    <section class="case-section">
+      <p class="section-label">Concept → Built</p>
+      <div class="case-body">
+        <p><!-- SECTION INTRO — 1–2 sentences framing what this pairing shows --></p>
+      </div>
+      <div class="concept-built">
+        <div class="concept-panel">
+          <img src="<!-- CONCEPT IMAGE SRC -->" alt="<!-- CONCEPT ALT TEXT -->">
+          <span class="concept-panel-label">Concept</span>
+          <p class="concept-caption"><!-- CONCEPT CAPTION e.g. "Massing study, 2017 — HOK for Ilitch Holdings" --></p>
+        </div>
+        <div class="concept-panel">
+          <img src="<!-- BUILT IMAGE SRC -->" alt="<!-- BUILT ALT TEXT -->">
+          <span class="concept-panel-label">Built</span>
+          <p class="concept-caption"><!-- BUILT CAPTION e.g. "Completed 2019 — Photo: Jason Keen" --></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SELECTED VIEWS (gallery)
+         SLOT: gallery images and captions
+         Default is 2-column. Add class "three-up" to gallery-grid for 3-col.
+         Add class "span-2" to a gallery-item to make it full width.
+         Remove section if no gallery images available.
+    ============================================================ -->
+    <section class="case-section">
+      <p class="section-label">Selected Views</p>
+      <div class="gallery-grid">
+        <div class="gallery-item span-2">
+          <img src="<!-- GALLERY IMAGE 1 SRC -->" alt="<!-- ALT -->">
+          <p class="gallery-caption"><!-- CAPTION 1 --></p>
+        </div>
+        <div class="gallery-item">
+          <img src="<!-- GALLERY IMAGE 2 SRC -->" alt="<!-- ALT -->">
+          <p class="gallery-caption"><!-- CAPTION 2 --></p>
+        </div>
+        <div class="gallery-item">
+          <img src="<!-- GALLERY IMAGE 3 SRC -->" alt="<!-- ALT -->">
+          <p class="gallery-caption"><!-- CAPTION 3 --></p>
+        </div>
+        <!-- Add more gallery-item divs as needed -->
+      </div>
+    </section>
+
+    <!-- ============================================================
+         THE WORK
+         SLOT: work-list items — bullet breakdown of Dave's actual scope
+         Be specific. Owner's rep / design management framing throughout.
+    ============================================================ -->
+    <section class="case-section">
+      <p class="section-label">The Work</p>
+      <ul class="work-list">
+        <li><!-- WORK ITEM 1 --></li>
+        <li><!-- WORK ITEM 2 --></li>
+        <li><!-- WORK ITEM 3 --></li>
+        <li><!-- WORK ITEM 4 --></li>
+        <li><!-- WORK ITEM 5 --></li>
+        <!-- Add or remove li items as needed -->
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       PARTNERS
+       SLOT: partner names — firms Dave worked alongside
+       Use text names. Add logo imgs if available.
+       Remove entire section if not applicable.
+  ============================================================ -->
+  <div class="partners-strip">
+    <p class="partners-label">Partners &amp; Collaborators</p>
+    <div class="partners-list">
+      <span class="partner-name"><!-- PARTNER 1 --></span>
+      <span class="partner-name"><!-- PARTNER 2 --></span>
+      <span class="partner-name"><!-- PARTNER 3 --></span>
+      <!-- Add or remove partner spans as needed -->
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="case-footer">
+    <a href="index.html" class="footer-back">← Back to all work</a>
+    <span class="footer-sig">Dave Frazee</span>
+  </footer>
+
+</body>
+</html>
