@@ -85,6 +85,9 @@
   .marquee:hover .marquee-track{animation-play-state:paused;}
   .marquee-track img{height:64px;width:auto;margin:0 40px;opacity:.92;transition:opacity .25s, filter .25s;flex-shrink:0;}
   .marquee-track img:hover{opacity:1;filter:brightness(1.5);}
+  /* University of Michigan wordmark is dark-on-dark; invert so it reads against the dark marquee. 9th logo + its duplicate (18th) in the scroll loop. */
+  .marquee-track img:nth-child(9),.marquee-track img:nth-child(18){filter:invert(1);opacity:1;}
+  .marquee-track img:nth-child(9):hover,.marquee-track img:nth-child(18):hover{filter:invert(1) brightness(1.4);}
   @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
   @media(prefers-reduced-motion:reduce){.marquee-track{animation:none;flex-wrap:wrap;justify-content:center;width:auto;}.marquee{mask-image:none;-webkit-mask-image:none;}}
 
